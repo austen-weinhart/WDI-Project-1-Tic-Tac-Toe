@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="gameApp">
+<head>
+  <link rel="stylesheet" type="text/css" href="css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+  <script type="text/javascript" src="js/angular.js"></script>
+  <!-- Firebase -->
+  <script src="https://cdn.firebase.com/js/client/2.2.2/firebase.js"></script>
+  <!-- AngularFire -->
+  <script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+
+  
+  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/controller.js"></script>
+  <title>Manatees vs. Motorboats</title>
+</head>
+
+<body ng-controller="gameController as game">
+  <h1>TIC-TAC-TOE</h1>
+  <h2>MANATEES VS. MOTORBOATS</h2>
+
+  <div id="big">
+    <div id="gameboard">
+      <div class="hole" ng-repeat="cell in game.gameObject.listOfCells" ng-click="game.showImage($index)">
+        <img ng-src="{{cell.image}}">
+      </div>
+    </div>
+
+    <div id="scoreboard">
+      <h3>{{ game.gameObject.playerDisplay.turn }} TURN</h3>
+      <img ng-src="{{game.gameObject.playerDisplay.image}}" id="player">
+      <h3 id="reset" ng-click="game.restart()">RESET</h3>
+    </div>
+  </div>
+
+    <h2> {{ game.gameObject.winner }}</h2>
+  
+</body>
+
+</html>

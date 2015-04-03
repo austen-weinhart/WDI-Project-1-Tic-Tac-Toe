@@ -1,0 +1,9 @@
+{
+  "firebase": "project-1-austen",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
