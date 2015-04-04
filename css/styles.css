@@ -12,7 +12,6 @@ body {
     text-align: center;
     width: 800px;
     display: inline-block;
-    /*border: 1px solid green;*/
 }
 
 #scoreboard {
@@ -90,7 +89,6 @@ input {
 }
 
 #big {
-    /*border: 1px solid red;*/
     width: 100%;
     text-align: center;
 }

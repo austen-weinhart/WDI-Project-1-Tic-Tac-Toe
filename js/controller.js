@@ -5,223 +5,156 @@ gameController.$inject = ['$firebaseObject'];
 
 function gameController($firebaseObject) {
 
-    var self = this;
+  var self = this;
 
-    var manateeImage = "images/black_manatee_icon.png";
+  var manateeImage = "images/black_manatee_icon.png";
 
-    var boatImage = "images/motorboat-noun.png";
+  var boatImage = "images/motorboat-noun.png";
 
-    // var player = "manatee";
-
-    self.gameObject = syncGame();
+  self.gameObject = syncGame();
 
 
+  //////////////////////////////////////////////////////////////////////////////////////
+  // SYNCING TO FIREBASE
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  function syncGame() {
+    var ref = new Firebase('https://project-1-austen.firebaseio.com/');
+    var syncedObject = $firebaseObject(ref);
     //////////////////////////////////////////////////////////////////////////////////////
-    // SYNCING TO FIREBASE
+    // SETTINGS ON LOAD
     //////////////////////////////////////////////////////////////////////////////////////
-
-    function syncGame() {
-      var ref = new Firebase('https://project-1-austen.firebaseio.com/');
-      var syncedObject = $firebaseObject(ref);
+    syncedObject.$loaded(function() {
+      syncedObject.winner = "";
+      syncedObject.player = "manatee";
+      syncedObject.counter = 0;
+      syncedObject.playerDisplay = {
+        turn: "MANATEE",
+        image: manateeImage
+      };
       //////////////////////////////////////////////////////////////////////////////////////
-      // SETTINGS ON LOAD
+      // LIST OF CELLS
       //////////////////////////////////////////////////////////////////////////////////////
-      syncedObject.$loaded(function() {
-        syncedObject.winner = "";
-        syncedObject.player = "manatee";
-        syncedObject.playerDisplay = {
-          turn: "MANATEE",
-          image: manateeImage
-        };
-        //////////////////////////////////////////////////////////////////////////////////////
-        // LIST OF CELLS
-        //////////////////////////////////////////////////////////////////////////////////////
 
-        syncedObject.listOfCells = [{
-          occupier: "one",
-          image: "images/blank.png"
-        }, {
-          occupier: "two",
-          image: "images/blank.png"
-        }, {
-          occupier: "three",
-          image: "images/blank.png"
-        }, {
-          occupier: "four",
-          image: "images/blank.png"
-        }, {
-          occupier: "five",
-          image: "images/blank.png"
-        }, {
-          occupier: "six",
-          image: "images/blank.png"
-        }, {
-          occupier: "seven",
-          image: "images/blank.png"
-        }, {
-          occupier: "eight",
-          image: "images/blank.png"
-        }, {
-          occupier: "nine",
-          image: "images/blank.png"
-        }];
-        //end of listOfCells array
-        syncedObject.$save();
-      });
+      syncedObject.listOfCells = [{
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }, {
+        occupier: "",
+        image: "images/blank.png"
+      }];
+      //end of listOfCells array
+      syncedObject.$save();
+    });
 
-      return syncedObject;
-    }
+    return syncedObject;
+  }
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    //DECIDING THE WINNER
-    ////////////////////////////////////////////////////////////////////////////////////
-    self.decideWinner = decideWinner;
+  //////////////////////////////////////////////////////////////////////////////////////
+  //DECIDING THE WINNER
+  ////////////////////////////////////////////////////////////////////////////////////
+  self.decideWinner = decideWinner;
 
-    function decideWinner() {
-      //If top row is occupied
-      if (self.gameObject.listOfCells[0].occupier === self.gameObject.listOfCells[1].occupier && self.gameObject.listOfCells[0].occupier === self.gameObject.listOfCells[2].occupier) {
-        if (self.gameObject.listOfCells[0].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //If middle row is occupied
-      else if (self.gameObject.listOfCells[3].occupier === self.gameObject.listOfCells[4].occupier && self.gameObject.listOfCells[3].occupier === self.gameObject.listOfCells[5].occupier) {
-        if (self.gameObject.listOfCells[3].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //If the bottom row is occupied
-      else if (self.gameObject.listOfCells[6].occupier === self.gameObject.listOfCells[7].occupier && self.gameObject.listOfCells[6].occupier === self.gameObject.listOfCells[8].occupier) {
-        if (self.gameObject.listOfCells[6].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //If the left column is occupied
-      else if (self.gameObject.listOfCells[0].occupier === self.gameObject.listOfCells[3].occupier && self.gameObject.listOfCells[0].occupier === self.gameObject.listOfCells[6].occupier) {
-        if (self.gameObject.listOfCells[0].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //If the middle column is occupied
-      else if (self.gameObject.listOfCells[1].occupier === self.gameObject.listOfCells[4].occupier && self.gameObject.listOfCells[1].occupier === self.gameObject.listOfCells[7].occupier) {
-        if (self.gameObject.listOfCells[1].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //If the right column is occupied
-      else if (self.gameObject.listOfCells[2].occupier === self.gameObject.listOfCells[5].occupier && self.gameObject.listOfCells[2].occupier === self.gameObject.listOfCells[8].occupier) {
-        if (self.gameObject.listOfCells[2].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //If the forward diagonal is occupied
-      else if (self.gameObject.listOfCells[0].occupier === self.gameObject.listOfCells[4].occupier && self.gameObject.listOfCells[0].occupier === self.gameObject.listOfCells[8].occupier) {
-        if (self.gameObject.listOfCells[0].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //If the back diagonal is occupied
-      else if (self.gameObject.listOfCells[6].occupier === self.gameObject.listOfCells[4].occupier && self.gameObject.listOfCells[6].occupier === self.gameObject.listOfCells[2].occupier) {
-        if (self.gameObject.listOfCells[6].occupier === "manatee") {
-          self.gameObject.winner = "THE MANATEES SURVIVE!";
-          self.gameObject.$save();
-        } else {
-          self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
-          self.gameObject.$save();
-        }
-      }
-      //Cat's Game
-      else if (self.gameObject.listOfCells[0].occupier !== "one" && self.gameObject.listOfCells[1].occupier !== "two" && self.gameObject.listOfCells[2].occupier !== "three" && self.gameObject.listOfCells[3].occupier !== "four" && self.gameObject.listOfCells[4].occupier !== "five" && self.gameObject.listOfCells[5].occupier !== "six" && self.gameObject.listOfCells[6].occupier !== "seven" && self.gameObject.listOfCells[7].occupier !== "eight" && self.gameObject.listOfCells[8].occupier !== "nine") {
-        self.gameObject.winner = "STALEMATE";
+  function checkWinner(c1, c2, c3) {
+
+    if (self.gameObject.listOfCells[c1].occupier === self.gameObject.listOfCells[c2].occupier && self.gameObject.listOfCells[c1].occupier === self.gameObject.listOfCells[c3].occupier && self.gameObject.listOfCells[c1].occupier !== "") {
+      if (self.gameObject.listOfCells[c1].occupier === "manatee") {
+        self.gameObject.winner = "THE MANATEES SURVIVE!";
+        self.gameObject.$save();
+      } else {
+        self.gameObject.winner = "THE MANATEES ARE EXTINCT!";
         self.gameObject.$save();
       }
-      //Logs the winner
-      console.log(self.gameObject.winner);
     }
+  }
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    //MAKES IMAGE APPEAR WHEN CELL IS CLICKED, THEN SWITCHES PLAYER
-    ///////////////////////////////////////////////////////////////////////////////////
-    self.showImage = function($index) {
-      if (self.gameObject.winner === "") {
-        if (self.gameObject.listOfCells[$index].image === "images/blank.png") {
-          if (self.gameObject.player === "manatee") {
-            self.gameObject.listOfCells[$index].image = manateeImage;
-            self.gameObject.listOfCells[$index].occupier = "manatee";
-            self.gameObject.player = "boat";
-            self.gameObject.playerDisplay.turn = "BOAT";
-            self.gameObject.playerDisplay.image = boatImage;
-            self.gameObject.$save();
-            self.decideWinner();
-          } else {
-            self.gameObject.listOfCells[$index].image = boatImage;
-            self.gameObject.listOfCells[$index].occupier = "boat";
-            self.gameObject.player = "manatee";
-            self.gameObject.playerDisplay.turn = "MANATEE";
-            self.gameObject.playerDisplay.image = manateeImage;
-            self.gameObject.$save();
-            self.decideWinner();
-          }
+  function decideWinner() {
+    //ROWS
+    checkWinner(0, 1, 2);
+    checkWinner(3, 4, 5);
+    checkWinner(6, 7, 8);
+    //COLLUMNS
+    checkWinner(0, 3, 6);
+    checkWinner(1, 4, 7);
+    checkWinner(2, 5, 8);
+    //DIAGONALS
+    checkWinner(0, 4, 8);
+    checkWinner(2, 4, 6);
+    //CAT'S GAME
+    if (self.gameObject.counter >= 9) {
+      self.gameObject.winner = "STALEMATE";
+      self.gameObject.$save();
+    }
+    console.log(self.gameObject.winner);
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  //MAKES IMAGE APPEAR WHEN CELL IS CLICKED, THEN SWITCHES PLAYER
+  ///////////////////////////////////////////////////////////////////////////////////
+  self.showImage = function($index) {
+    if (self.gameObject.winner === "") {
+      if (self.gameObject.listOfCells[$index].image === "images/blank.png") {
+        if (self.gameObject.player === "manatee") {
+          self.gameObject.listOfCells[$index].image = manateeImage;
+          self.gameObject.listOfCells[$index].occupier = "manatee";
+          self.gameObject.player = "boat";
+          self.gameObject.playerDisplay.turn = "BOAT";
+          self.gameObject.playerDisplay.image = boatImage;
+          self.gameObject.counter += 1;
+          console.log(self.gameObject.counter);
+          self.gameObject.$save();
+          self.decideWinner();
+        } else {
+          self.gameObject.listOfCells[$index].image = boatImage;
+          self.gameObject.listOfCells[$index].occupier = "boat";
+          self.gameObject.player = "manatee";
+          self.gameObject.playerDisplay.turn = "MANATEE";
+          self.gameObject.playerDisplay.image = manateeImage;
+          self.gameObject.counter += 1;
+          console.log(self.gameObject.counter);
+          self.gameObject.$save();
+          self.decideWinner();
         }
       }
-    };
+    }
+  };
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    //RESET BUTTON
-    ///////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+  //RESET BUTTON
+  ///////////////////////////////////////////////////////////////////////////////////
 
-    self.restart = function() {
-      self.gameObject.listOfCells[0].occupier = "one";
-      self.gameObject.listOfCells[1].occupier = "two";
-      self.gameObject.listOfCells[2].occupier = "three";
-      self.gameObject.listOfCells[3].occupier = "four";
-      self.gameObject.listOfCells[4].occupier = "five";
-      self.gameObject.listOfCells[5].occupier = "six";
-      self.gameObject.listOfCells[6].occupier = "seven";
-      self.gameObject.listOfCells[7].occupier = "eight";
-      self.gameObject.listOfCells[8].occupier = "nine";
-      self.gameObject.listOfCells[0].image = "images/blank.png";
-      self.gameObject.listOfCells[1].image = "images/blank.png";
-      self.gameObject.listOfCells[2].image = "images/blank.png";
-      self.gameObject.listOfCells[3].image = "images/blank.png";
-      self.gameObject.listOfCells[4].image = "images/blank.png";
-      self.gameObject.listOfCells[5].image = "images/blank.png";
-      self.gameObject.listOfCells[6].image = "images/blank.png";
-      self.gameObject.listOfCells[7].image = "images/blank.png";
-      self.gameObject.listOfCells[8].image = "images/blank.png";
-      self.gameObject.winner = "";
-      self.gameObject.$save();
-      self.decideWinner();
-    };
-  }
-  ///////////////////////////////////////////////////////////////////////////////////
-  //end of gameController
-  ///////////////////////////////////////////////////////////////////////////////////
+  self.restart = function() {
+    for (var i = 0; i < 9; i++) {
+      self.gameObject.listOfCells[i].occupier = "";
+      self.gameObject.listOfCells[i].image = "images/blank.png";
+    }
+    self.gameObject.winner = "";
+    self.gameObject.counter = 0;
+    self.gameObject.$save();
+    self.decideWinner();
+  };
+}
+///////////////////////////////////////////////////////////////////////////////////
+//end of gameController
+///////////////////////////////////////////////////////////////////////////////////
